@@ -1,5 +1,15 @@
 "use client";
+import Image from "next/image";
+
 import React, { useState, useEffect } from "react";
+interface ImageLoaderProps {
+  src: string;
+  width: number;
+}
+
+const ImageLoader = ({ src, width }: ImageLoaderProps): string => {
+  return `http://127.0.0.1:8000${src}?w=${width}&q=${75}`;
+};
 interface Meta {
   title: string;
   description: string;
@@ -8,7 +18,7 @@ interface Meta {
   category: number;
   id: number;
   state: string;
-  imageUrl: string | null;
+  image: string | null;
   seller: number;
 }
 interface ApiResponse {
@@ -17,7 +27,7 @@ interface ApiResponse {
   previous: string | null;
   results: Meta[];
 }
-const link: string = "http://127.0.0.1:8000/";
+const link: string = "http://127.0.0.1:8000";
 const ListingData: React.FC = () => {
   const [data, setData] = useState<ApiResponse | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
@@ -65,6 +75,18 @@ const ListingData: React.FC = () => {
           <p>Category ID: {item.category}</p>
           <p>Seller ID: {item.seller}</p>
           <p>State: {item.state}</p>
+          {item.image ? (
+            <Image
+              //src={"http://127.0.0.1:8000" + item.image}
+              loader={ImageLoader}
+              src={item.image}
+              width={400}
+              height={400}
+              alt="image of product"
+            />
+          ) : (
+            <div> No image</div>
+          )}
         </div>
       ))}
     </div>
