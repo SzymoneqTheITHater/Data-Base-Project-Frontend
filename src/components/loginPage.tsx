@@ -6,7 +6,7 @@ import { useUser } from "./getUserData";
 
 export default function LoginPage() {
   const router = useRouter();
-  const { setUser } = useUser();
+  const { setUser, setAccessToken } = useUser();
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -40,11 +40,12 @@ export default function LoginPage() {
       document.cookie = serialize("user", JSON.stringify(data.user), {
         httpOnly: false,
         secure: process.env.NODE_ENV === "production",
-        maxAge: 60 * 60 * 24 * 7,
+        maxAge: 60 * 60,
         path: "/",
       });
 
       setUser(data.user);
+      setAccessToken(data.access_token);
 
       router.push("/myAccount");
 
