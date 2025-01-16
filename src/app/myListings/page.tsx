@@ -39,8 +39,7 @@ export default function Page() {
       };
 
       API.addListing(accessToken, body)
-        .then(res => res.json())
-        .then(({ id, state, createdAt }) => {
+        .then(({ id, state, created_at }) => {
           const newListing: IListing = {
             id,
             title,
@@ -50,8 +49,8 @@ export default function Page() {
             seller: user,
             isActive: true,
             category: null,
-            createdAt,
-            state
+            createdAt: created_at,
+            state: state as TState
           };
 
           const newListings: IListing[] = (listings || []).concat(newListing);
@@ -72,13 +71,13 @@ export default function Page() {
           <Fieldset.Root>
             <Fieldset.Content>
               <Field label="Title">
-                <Input ref={titleRef} variant={'subtle'} color={'black'}/>
+                <Input ref={titleRef} variant={'subtle'} color={'black'} />
               </Field>
               <Field label="Description">
-                <Input ref={descriptionRef} variant={'subtle'} color={'black'}/>
+                <Input ref={descriptionRef} variant={'subtle'} color={'black'} />
               </Field>
               <Field label="Location">
-                <Input ref={locationRef} variant={'subtle'} color={'black'}/>
+                <Input ref={locationRef} variant={'subtle'} color={'black'} />
               </Field>
               <NumberInput.Root variant={'subtle'}>
                 <NumberInput.Label>Price</NumberInput.Label>
@@ -99,7 +98,7 @@ export default function Page() {
         </Container>
       )}
       <div>
-        <ListingData page={1} sellerId={user?.id || 0} category={0} listings={listings} onBuy={() => undefined}/>
+        <ListingData page={1} sellerId={user?.id || 0} category={0} listings={listings} onBuy={() => undefined} />
       </div>
     </div>
   )

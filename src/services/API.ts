@@ -1,6 +1,6 @@
 "use client";
 
-import IListing, { IListingRequest } from "@/models/IListing";
+import IListing, { IListingRequest, IListingResponse } from "@/models/IListing";
 
 export default class API {
     static apiUrl: string = "http://127.0.0.1:8000";
@@ -51,7 +51,7 @@ export default class API {
     static sendMessage(accessToken: string, listingId: number, chatId: number, content: string) {
         return this.post(accessToken, this.apiUrl + "/addmessage/" + listingId + '/' + chatId, { content });
     }
-    static addListing(accessToken: string, listing: IListingRequest) {
+    static addListing(accessToken: string, listing: IListingRequest): Promise<IListingResponse> {
         return this.post(accessToken, this.apiUrl + "/listings/create/", listing);
     }
 }

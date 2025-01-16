@@ -19,3 +19,16 @@ export default interface IListing {
 export interface IListingRequest extends Pick<IListing, 'title' | 'description' | 'price' | 'location'> {
     seller: number,
 }
+
+export interface IListingResponse {
+    title: string,
+    description: string,
+    price: number,
+    location: string,
+    created_at: string,
+    category: any, // TODO
+    id: number,
+    state: string,
+    image: any, // TODO
+    seller: number,
+}
