@@ -10,6 +10,7 @@ import mockData from "@/mockData";
 import IMessage from "@/models/IMessage";
 import IChat from "@/models/IChat";
 import { useUser } from "./getUserData";
+import { DataListItem, DataListRoot } from "./ui/data-list";
 
 interface IProps extends IListing {
 }
@@ -68,12 +69,16 @@ export default function Listing(props: IProps) {
         })
     }
 
-    const { title, description } = props;
+    const { title, description, price, location } = props;
     return (
         <Card.Root variant={'elevated'}>
             <Card.Body>
                 <Card.Title>{title}</Card.Title>
-                <Card.Description>{description}</Card.Description>
+                <DataListRoot>
+                    <DataListItem key='description' label='Description' value={description} />
+                    <DataListItem key='price' label='Price' value={price} />
+                    <DataListItem key='location' label='Location' value={location} />
+                </DataListRoot>
             </Card.Body>
             <Card.Footer>
                 <Button color={"blue.600"} variant={'surface'}>Buy</Button>
