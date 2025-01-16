@@ -41,6 +41,7 @@ interface IProps {
   sellerId: number,
   category: number,
   listings?: IListing[],
+  onBuy(listingId: number): any,
 }
 
 const link: string = "http://127.0.0.1:8000";
@@ -64,6 +65,7 @@ export default function ListingData(props: IProps) {
           props.listings.map(item => (
             <Listing
               {...item}
+              onBuy={props.onBuy}
             />
           ))}
     </Container>

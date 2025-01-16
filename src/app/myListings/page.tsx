@@ -99,7 +99,7 @@ export default function Page() {
         </Container>
       )}
       <div>
-        <ListingData page={1} sellerId={user?.id || 0} category={0} listings={listings} />
+        <ListingData page={1} sellerId={user?.id || 0} category={0} listings={listings} onBuy={() => undefined}/>
       </div>
     </div>
   )

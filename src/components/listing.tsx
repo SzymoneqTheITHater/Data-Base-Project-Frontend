@@ -1,7 +1,7 @@
 "use client";
 
 import IListing from "@/models/IListing";
-import { Button, Card, Input, Skeleton, Stack } from "@chakra-ui/react";
+import { Button, Card, DialogActionTrigger, DialogBody, DialogCloseTrigger, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger, Input, Skeleton, Stack } from "@chakra-ui/react";
 import { DrawerBackdrop, DrawerBody, DrawerCloseTrigger, DrawerContent, DrawerFooter, DrawerHeader, DrawerRoot, DrawerTitle, DrawerTrigger } from "./ui/drawer";
 import { Field } from "./ui/field";
 import React from "react";
@@ -11,8 +11,10 @@ import IMessage from "@/models/IMessage";
 import IChat from "@/models/IChat";
 import { useUser } from "./getUserData";
 import { DataListItem, DataListRoot } from "./ui/data-list";
+import { DialogRoot } from "./ui/dialog";
 
 interface IProps extends IListing {
+    onBuy(listingId: number): any,
 }
 
 export default function Listing(props: IProps) {
@@ -69,7 +71,7 @@ export default function Listing(props: IProps) {
         })
     }
 
-    const { title, description, price, location } = props;
+    const { id, title, description, price, location } = props;
     return (
         <Card.Root variant={'elevated'}>
             <Card.Body>
@@ -81,9 +83,8 @@ export default function Listing(props: IProps) {
                 </DataListRoot>
             </Card.Body>
             <Card.Footer>
-                <Button color={"blue.600"} variant={'surface'}>Buy</Button>
+                <Button color={"blue.600"} variant={'surface'} onClick={() => props.onBuy(id)}>Buy</Button>
                 <DrawerRoot>
-                    <DrawerBackdrop />
                     <DrawerTrigger asChild>
                         <Button color={"blue.600"} variant={'surface'} onClick={onContact}>Contact</Button>
                     </DrawerTrigger>
