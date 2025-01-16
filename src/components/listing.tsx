@@ -11,6 +11,8 @@ import IMessage from "@/models/IMessage";
 import IChat from "@/models/IChat";
 import { useUser } from "./getUserData";
 import { DataListItem, DataListRoot } from "./ui/data-list";
+import { EmptyState } from "./ui/empty-state";
+import { LuAnnoyed } from "react-icons/lu";
 
 interface IProps extends IListing {
     onBuy(listingId: number): any,
@@ -100,8 +102,12 @@ export default function Listing(props: IProps) {
                                             <Skeleton height={50} />
                                         </>
                                         :
-                                        (!chatExists ?
-                                            "You are beginning a new conversation."
+                                        (!chatExists || messages?.length === 0 ?
+                                            <EmptyState
+                                                icon={<LuAnnoyed />}
+                                                title="No messages"
+                                                description="Begin a great conversation now!"
+                                            />
                                             :
                                             messages?.map(message => (
                                                 <Card.Root variant={'subtle'}>
