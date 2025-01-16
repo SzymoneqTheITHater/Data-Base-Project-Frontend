@@ -3,3 +3,9 @@ export default interface IUser {
     username: string;
     email: string;
 }
+
+export interface INewUserRequest {
+    username: string,
+    email: string,
+    password: string,
+}

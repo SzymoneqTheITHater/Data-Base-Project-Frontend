@@ -1,21 +1,23 @@
 "use client";
 
 import IListing, { IListingRequest, IListingResponse } from "@/models/IListing";
+import { INewUserRequest } from "@/models/IUser";
 
 export default class API {
     static apiUrl: string = "http://127.0.0.1:8000";
 
-    private static async post(accessToken: string, url: string, body?: object) {
+    private static async post(accessToken: string | undefined, url: string, body?: object) {
         const bodyString: string | undefined = body ? JSON.stringify(body) : undefined;
+        const headers: [string, string][] = [["Content-Type", "application/json"]];
+        if (accessToken) {
+            headers.push(["Authorization", "Bearer " + accessToken]);
+        }
 
         try {
             const res = await fetch(url, {
                 method: 'POST',
                 body: bodyString,
-                headers: {
-                    "Content-Type": "application/json",
-                    "Authorization": "Bearer " + accessToken
-                },
+                headers: headers
             });
             const resJson = await res.json();
             return resJson;
@@ -25,7 +27,7 @@ export default class API {
         }
     }
 
-    private static async get(accessToken: string, url: string) {
+    private static async get(accessToken: string | undefined, url: string) {
         try {
             const res = await fetch(url, {
                 method: 'POST',
@@ -56,5 +58,8 @@ export default class API {
     }
     static addListing(accessToken: string, listing: IListingRequest): Promise<IListingResponse> {
         return this.post(accessToken, this.apiUrl + "/listings/create/", listing);
+    }
+    static createUser(data: INewUserRequest) {
+        return this.post(undefined, this.apiUrl + "/signup/", data);
     }
 }
