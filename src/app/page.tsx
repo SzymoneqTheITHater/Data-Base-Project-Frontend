@@ -1,13 +1,18 @@
 "use client";
 import Form from "@/components/form";
+import { useUser } from "@/components/getUserData";
 import ListingData from "@/components/listingdata";
 import { Field } from "@/components/ui/field";
 import mockData from "@/mockData";
 import IListing from "@/models/IListing";
+import { ITransactionRequest } from "@/models/ITransaction";
 import API from "@/services/API";
 import { SelectRoot, SelectLabel, SelectTrigger, SelectContent, SelectItem, Input, createListCollection } from "@chakra-ui/react";
 import React from "react";
 export default function Home() {
+  const { accessToken } = useUser();
+
+
   const [category, setCategory] = React.useState(0);
   const [refreshKey, setRefreshKey] = React.useState(0);
   const [listings, setListings] = React.useState<IListing[]>();
@@ -24,9 +29,17 @@ export default function Home() {
       .then(listings => setListings(listings.results));
   }, []);
 
-  const onFormConfirm = () => {
-    setSelectedListingId(undefined);
-    // TODO add transaction
+  const onConfirmForm = () => {
+    if (accessToken && selectedListingId !== undefined) {
+      const transactionRequest: ITransactionRequest = {
+        listing: selectedListingId
+      }
+      API.createTransaction(accessToken, transactionRequest)
+        .then(res => {
+          setSelectedListingId(undefined);
+
+        })
+    }
   }
 
   return (
@@ -35,7 +48,7 @@ export default function Home() {
       <button className="bg-cyan-900 text-white" onClick={() => setCategory(2)}>
         All listings
       </button>
-      <Form open={selectedListingId !== undefined} onConfirm={onFormConfirm} onClose={() => setSelectedListingId(undefined)}>
+      <Form open={selectedListingId !== undefined} onConfirm={onConfirmForm} onClose={() => setSelectedListingId(undefined)}>
         <Field label="Your name">
           <Input variant={'subtle'} />
         </Field>

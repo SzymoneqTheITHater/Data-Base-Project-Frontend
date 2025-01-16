@@ -1,6 +1,7 @@
 import { User } from "@/components/getUserData";
 import IListing from "./IListing";
 import IUser from "./IUser";
+import { TStatus } from "./TStatus";
 
 interface ITransaction {
     id: number;
@@ -9,4 +10,22 @@ interface ITransaction {
     buyer: User;
     transactionDate: string; // ISO string for date
     status: 'pending' | 'completed' | 'cancelled';
+}
+
+export interface ITransactionRequest {
+    listing: number,
+    //user: number,
+}
+
+export interface ITransactionResponse {
+    buyer: number,
+    seller: number,
+    id: number,
+    listing: number,
+    status: TStatus,
+    transaction_date: string,
+}
+
+export interface IUpdateTransactionRequest {
+    status: TStatus
 }

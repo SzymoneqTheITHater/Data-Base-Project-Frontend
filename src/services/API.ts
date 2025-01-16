@@ -1,6 +1,7 @@
 "use client";
 
 import IListing, { IListingRequest, IListingResponse, IListingsResponse } from "@/models/IListing";
+import { ITransactionRequest, ITransactionResponse, IUpdateTransactionRequest } from "@/models/ITransaction";
 import { INewUserRequest } from "@/models/IUser";
 
 export default class API {
@@ -64,5 +65,11 @@ export default class API {
     }
     static createUser(data: INewUserRequest) {
         return this.post(undefined, this.apiUrl + "/signup/", data);
+    }
+    static createTransaction(accessToken: string, data: ITransactionRequest): Promise<ITransactionResponse> {
+        return this.post(accessToken, this.apiUrl + "/transactions/", data);
+    }
+    static updateTransaction(accessToken: string, data: IUpdateTransactionRequest) {
+        return this.post(accessToken, this.apiUrl + "/transactions/", data);
     }
 }
