@@ -26,21 +26,26 @@ export default function Listing(props: IProps) {
     const messageRef = React.useRef<HTMLInputElement>(null);
 
     const onSend = () => {
-        if (messageRef.current && chat !== undefined && user && accessToken) {
+        if (messageRef.current && user && accessToken) {
             const content: string = messageRef.current.value;
-            API.sendMessage(accessToken, props.id, chat.id, content)
-                .then(({ id, createdAt }) => {
-                    const newMessage: IMessage = {
-                        id,
-                        chat,
-                        sender: user,
-                        content,
-                        status: "sent",
-                        createdAt
-                    }
-                    const newMessages: IMessage[] = (messages || []).concat(newMessage);
-                    setMessages(newMessages);
-                })
+
+            if (!chat) {
+                API.startNewChat(accessToken, props.id, user.id, content)
+            } else {
+                API.sendMessageToChat(accessToken, props.id, chat.id, content)
+                    .then(({ id, createdAt }) => {
+                        const newMessage: IMessage = {
+                            id,
+                            chat,
+                            sender: user,
+                            content,
+                            status: "sent",
+                            createdAt
+                        }
+                        const newMessages: IMessage[] = (messages || []).concat(newMessage);
+                        setMessages(newMessages);
+                    })
+            }
         }
     }
 
@@ -48,13 +53,12 @@ export default function Listing(props: IProps) {
     const onContact = () => {
         if (accessToken) {
             API.getChat(accessToken, props.id)
-                .then(res => {
-                    if (res) {
+                .then((res: any[]) => {
+                    if (res.length !== 0) {
                         setChatExists(true);
                         setChat(mockData.chat1);
-    
-                        //API.getMessages(mockData.chat1.id)
-                        setMessages(mockData.chat1messages);
+
+                        API.getMessages(accessToken, mockData.chat1.id)
                     } else {
                         setChatExists(false);
                     }

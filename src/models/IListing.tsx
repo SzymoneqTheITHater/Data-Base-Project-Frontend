@@ -32,3 +32,10 @@ export interface IListingResponse {
     image: any, // TODO
     seller: number,
 }
+
+export interface IListingsResponse {
+    count: number,
+    next: any,
+    previous: any,
+    results: IListing[],
+}

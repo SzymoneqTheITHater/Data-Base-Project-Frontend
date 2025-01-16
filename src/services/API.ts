@@ -1,6 +1,6 @@
 "use client";
 
-import IListing, { IListingRequest, IListingResponse } from "@/models/IListing";
+import IListing, { IListingRequest, IListingResponse, IListingsResponse } from "@/models/IListing";
 import { INewUserRequest } from "@/models/IUser";
 
 export default class API {
@@ -30,7 +30,7 @@ export default class API {
     private static async get(accessToken: string | undefined, url: string) {
         try {
             const res = await fetch(url, {
-                method: 'POST',
+                method: 'GET',
                 headers: {
                     "Content-Type": "application/json",
                     "Authorization": "Bearer " + accessToken
@@ -45,15 +45,18 @@ export default class API {
     }
 
     static getChat(accessToken: string, listingId: number) {
-        return this.post(accessToken, this.apiUrl + "/chats/" + listingId);
+        return this.get(accessToken, this.apiUrl + "/chats/" + listingId);
+    }
+    static startNewChat(accessToken: string, listingId: number, senderId: number, content: string) {
+        return this.post(accessToken, this.apiUrl + "/addmessage/" + listingId, { content, sender_id: senderId });
     }
     static getMessages(accessToken: string, chatId: number) {
         return this.post(accessToken, this.apiUrl + "/messages/" + chatId);
     }
-    static sendMessage(accessToken: string, listingId: number, chatId: number, content: string) {
+    static sendMessageToChat(accessToken: string, listingId: number, chatId: number, content: string) {
         return this.post(accessToken, this.apiUrl + "/addmessage/" + listingId + '/' + chatId, { content });
     }
-    static getListings(): Promise<IListing[]> {
+    static getListings(): Promise<IListingsResponse> {
         return this.get(undefined, this.apiUrl + "/");
     }
     static addListing(accessToken: string, listing: IListingRequest): Promise<IListingResponse> {

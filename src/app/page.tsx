@@ -4,6 +4,7 @@ import ListingData from "@/components/listingdata";
 import { Field } from "@/components/ui/field";
 import mockData from "@/mockData";
 import IListing from "@/models/IListing";
+import API from "@/services/API";
 import { SelectRoot, SelectLabel, SelectTrigger, SelectContent, SelectItem, Input, createListCollection } from "@chakra-ui/react";
 import React from "react";
 export default function Home() {
@@ -19,19 +20,8 @@ export default function Home() {
 
 
   React.useEffect(() => {
-    /*     const body = {
-    
-        };
-        fetch(url + "/listings/", {
-          headers: {
-    
-          },
-          body: JSON.stringify()
-        })
-     */
-    setTimeout(() => {
-      setListings(mockData.listings);
-    }, 3000);
+    API.getListings()
+      .then(listings => setListings(listings.results));
   }, []);
 
   const onFormConfirm = () => {
