@@ -12,7 +12,6 @@ import React from "react";
 export default function Home() {
   const { accessToken } = useUser();
 
-
   const [category, setCategory] = React.useState(0);
   const [refreshKey, setRefreshKey] = React.useState(0);
   const [listings, setListings] = React.useState<IListing[]>();

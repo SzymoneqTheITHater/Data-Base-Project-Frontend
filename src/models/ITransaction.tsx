@@ -2,8 +2,9 @@ import { User } from "@/components/getUserData";
 import IListing from "./IListing";
 import IUser from "./IUser";
 import { TStatus } from "./TStatus";
+import IDjangoResponse from "./IDjangoResponse";
 
-interface ITransaction {
+export interface ITransaction {
     id: number;
     listing: IListing;
     seller: IUser;
@@ -27,5 +28,8 @@ export interface ITransactionResponse {
 }
 
 export interface IUpdateTransactionRequest {
-    status: TStatus
+    status: TStatus,
+    user: number
 }
+
+export interface ITransactionsResponse extends IDjangoResponse<ITransactionResponse> { }

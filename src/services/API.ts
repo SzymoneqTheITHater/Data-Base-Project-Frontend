@@ -1,7 +1,7 @@
 "use client";
 
 import IListing, { IListingRequest, IListingResponse, IListingsResponse } from "@/models/IListing";
-import { ITransactionRequest, ITransactionResponse, IUpdateTransactionRequest } from "@/models/ITransaction";
+import { ITransactionRequest, ITransactionResponse, ITransactionsResponse, IUpdateTransactionRequest } from "@/models/ITransaction";
 import { INewUserRequest } from "@/models/IUser";
 
 export default class API {
@@ -45,8 +45,30 @@ export default class API {
         }
     }
 
+    private static async patch(accessToken: string | undefined, url: string, body?: object) {
+        const bodyString: string | undefined = body ? JSON.stringify(body) : undefined;
+        try {
+            const res = await fetch(url, {
+                method: 'PATCH',
+                body: bodyString,
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": "Bearer " + accessToken
+                },
+            });
+            const resJson = await res.json();
+            return resJson;
+        } catch (error) {
+            console.error("Failed to get: ", error);
+            throw error;
+        }
+    }
+
     static getChat(accessToken: string, listingId: number) {
         return this.get(accessToken, this.apiUrl + "/chats/" + listingId);
+    }
+    static getChats(accessToken: string) {
+        return this.get(accessToken, this.apiUrl + "/chats/");
     }
     static startNewChat(accessToken: string, listingId: number, senderId: number, content: string) {
         return this.post(accessToken, this.apiUrl + "/addmessage/" + listingId, { content, sender_id: senderId });
@@ -66,10 +88,13 @@ export default class API {
     static createUser(data: INewUserRequest) {
         return this.post(undefined, this.apiUrl + "/signup/", data);
     }
+    static getTransactions(accessToken: string): Promise<ITransactionsResponse> {
+        return this.get(accessToken, this.apiUrl + "/transactions_all/");
+    }
     static createTransaction(accessToken: string, data: ITransactionRequest): Promise<ITransactionResponse> {
         return this.post(accessToken, this.apiUrl + "/transactions/", data);
     }
-    static updateTransaction(accessToken: string, data: IUpdateTransactionRequest) {
-        return this.post(accessToken, this.apiUrl + "/transactions/", data);
+    static updateTransaction(accessToken: string, transactionId: number, data: IUpdateTransactionRequest) {
+        return this.patch(accessToken, this.apiUrl + "/transactions/" + transactionId + "/update/", data);
     }
 }

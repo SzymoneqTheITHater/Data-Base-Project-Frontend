@@ -1,4 +1,5 @@
 import ICategory from "./ICategory";
+import IDjangoResponse from "./IDjangoResponse";
 import IUser from "./IUser";
 import { TState } from "./TState";
 
@@ -33,9 +34,4 @@ export interface IListingResponse {
     seller: number,
 }
 
-export interface IListingsResponse {
-    count: number,
-    next: any,
-    previous: any,
-    results: IListing[],
-}
+export interface IListingsResponse extends IDjangoResponse<IListing> { }
