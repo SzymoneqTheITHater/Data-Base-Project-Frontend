@@ -55,6 +55,32 @@ const chat1mes2: IMessage = {
 
 const chat1messages: IMessage[] = [chat1mes1, chat1mes2]
 
+const chat2: IChat = {
+    id: 1,
+    buyer: user1,
+    seller: user2,
+    listing: listing1
+}
+
+const chat2mes1: IMessage = {
+    id: 4,
+    chat: chat2,
+    sender: user1,
+    content: "Witam",
+    status: "sent",
+    createdAt: ""
+}
+const chat2mes2: IMessage = {
+    id: 5,
+    chat: chat2,
+    sender: user2,
+    content: "Pragne",
+    status: "sent",
+    createdAt: ""
+}
+
+const chat2messages: IMessage[] = [chat2mes1, chat2mes2]
+
 export default {
     user1,
     user2,
@@ -62,4 +88,6 @@ export default {
     listing1,
     chat1,
     chat1messages,
+    chat2,
+    chat2messages
 };

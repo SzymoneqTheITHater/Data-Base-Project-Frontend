@@ -14,7 +14,6 @@ import { useUser } from "./getUserData";
 interface IProps extends IListing {
 }
 
-const url: string = `http://127.0.0.1:8000`;
 export default function Listing(props: IProps) {
     const [messages, setMessages] = React.useState<IMessage[]>();
     const [chat, setChat] = React.useState<IChat>();
