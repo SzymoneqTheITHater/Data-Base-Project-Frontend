@@ -25,6 +25,8 @@ export function Navbar() {
 
   const onCreateAccount = () => {
     if (usernameRef.current && emailRef.current && passwordRef.current) {
+      setShowForm(false);
+      
       const username: string = usernameRef.current.value,
         email: string = emailRef.current.value,
         password: string = passwordRef.current.value;
