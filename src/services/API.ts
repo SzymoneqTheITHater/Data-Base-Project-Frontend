@@ -51,6 +51,9 @@ export default class API {
     static sendMessage(accessToken: string, listingId: number, chatId: number, content: string) {
         return this.post(accessToken, this.apiUrl + "/addmessage/" + listingId + '/' + chatId, { content });
     }
+    static getListings(): Promise<IListing[]> {
+        return this.get(undefined, this.apiUrl + "/");
+    }
     static addListing(accessToken: string, listing: IListingRequest): Promise<IListingResponse> {
         return this.post(accessToken, this.apiUrl + "/listings/create/", listing);
     }
