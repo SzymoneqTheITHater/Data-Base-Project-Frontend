@@ -1,8 +1,8 @@
 "use client";
 
 import IListing from "@/models/IListing";
-import { Button, Card, DialogActionTrigger, DialogBody, DialogCloseTrigger, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger, Input, Skeleton, Stack } from "@chakra-ui/react";
-import { DrawerBackdrop, DrawerBody, DrawerCloseTrigger, DrawerContent, DrawerFooter, DrawerHeader, DrawerRoot, DrawerTitle, DrawerTrigger } from "./ui/drawer";
+import { Button, Card, Input, Skeleton, Stack } from "@chakra-ui/react";
+import { DrawerBody, DrawerCloseTrigger, DrawerContent, DrawerFooter, DrawerHeader, DrawerRoot, DrawerTitle, DrawerTrigger } from "./ui/drawer";
 import { Field } from "./ui/field";
 import React from "react";
 import API from "@/services/API";
@@ -11,7 +11,6 @@ import IMessage from "@/models/IMessage";
 import IChat from "@/models/IChat";
 import { useUser } from "./getUserData";
 import { DataListItem, DataListRoot } from "./ui/data-list";
-import { DialogRoot } from "./ui/dialog";
 
 interface IProps extends IListing {
     onBuy(listingId: number): any,
@@ -22,53 +21,45 @@ export default function Listing(props: IProps) {
     const [chat, setChat] = React.useState<IChat>();
     const [chatExists, setChatExists] = React.useState<boolean>();
 
-    const { user } = useUser();
+    const { user, accessToken } = useUser();
 
     const messageRef = React.useRef<HTMLInputElement>(null);
 
     const onSend = () => {
-        if (messageRef.current && chat !== undefined && user) {
+        if (messageRef.current && chat !== undefined && user && accessToken) {
             const content: string = messageRef.current.value;
-            //API.sendMessage(props.id, chatId, content)
-
-            return new Promise<void>((resolve, reject) => {
-                setTimeout(() => {
+            API.sendMessage(accessToken, props.id, chat.id, content)
+                .then(({ id, createdAt }) => {
                     const newMessage: IMessage = {
-                        id: 5,
+                        id,
                         chat,
                         sender: user,
                         content,
                         status: "sent",
-                        createdAt: new Date().toISOString()
+                        createdAt
                     }
                     const newMessages: IMessage[] = (messages || []).concat(newMessage);
                     setMessages(newMessages);
-                    resolve();
-                }, 2000);
-            })
+                })
         }
     }
 
+    /** Proofs if a chat exists. */
     const onContact = () => {
-        /*         API.getChat(props.id)
-                    .then(res => {
-                    })
-         */
-        return new Promise<void>((resolve, reject) => {
-            setTimeout(() => {
-                if (true) {
-                    setChatExists(true);
-                    setChat(mockData.chat1);
-
-                    //API.getMessages(mockData.chat1.id)
-                    setMessages(mockData.chat1messages);
-                    resolve()
-                } else {
-                    setChatExists(false);
-                }
-
-            }, 2000);
-        })
+        if (accessToken) {
+            API.getChat(accessToken, props.id)
+                .then(res => {
+                    if (res) {
+                        setChatExists(true);
+                        setChat(mockData.chat1);
+    
+                        //API.getMessages(mockData.chat1.id)
+                        setMessages(mockData.chat1messages);
+                    } else {
+                        setChatExists(false);
+                    }
+                });
+        }
     }
 
     const { id, title, description, price, location } = props;

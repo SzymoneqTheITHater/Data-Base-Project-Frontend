@@ -3,6 +3,7 @@ import Link from "next/link";
 import LoginPage from "./loginPage";
 import { useUser } from "./getUserData";
 import { useState, useEffect } from "react";
+import { Button } from "./ui/button";
 export function Navbar() {
   const { user, accessToken, setAccessToken } = useUser();
   const [isLogged, setIsLogged] = useState(false);
@@ -49,6 +50,7 @@ export function Navbar() {
       ) : (
         <LoginPage />
       )}
+      <Button>Register</Button>
     </div>
   );
 }

@@ -44,24 +44,13 @@ interface IProps {
   onBuy(listingId: number): any,
 }
 
-const link: string = "http://127.0.0.1:8000";
 export default function ListingData(props: IProps) {
-  const [error, setError] = useState<string | null>(null);
-
-  /*
-  if (error) {
-    return <div>Error has occured; {error}</div>;
-  }
-  if (!data || !data.results || data.results.length === 0) {
-    return <div>No listings found.</div>;
-  }
-    */
   return (
     <Container maxWidth={'80%'}>
       {
-        !props.listings ? 
-        <Skeleton height={200}/>
-        :
+        !props.listings ?
+          <Skeleton height={200} />
+          :
           props.listings.map(item => (
             <Listing
               {...item}

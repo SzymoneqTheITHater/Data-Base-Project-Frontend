@@ -24,8 +24,7 @@ export default function Page() {
   }, []);
 
   const hAddButton = () => {
-    const url: string = "http://127.0.0.1:8000";
-    if (user && titleRef.current && descriptionRef.current && priceRef.current && locationRef.current) {
+    if (user && titleRef.current && descriptionRef.current && priceRef.current && locationRef.current && accessToken) {
       const title: string = titleRef.current.value,
         description: string = descriptionRef.current.value,
         price: number = +priceRef.current.value,
@@ -38,7 +37,8 @@ export default function Page() {
         location,
         seller: user.id
       };
-      API.addListing(body)
+
+      API.addListing(accessToken, body)
         .then(res => res.json())
         .then(({ id, state, createdAt }) => {
           const newListing: IListing = {
@@ -72,17 +72,17 @@ export default function Page() {
           <Fieldset.Root>
             <Fieldset.Content>
               <Field label="Title">
-                <Input ref={titleRef} variant={'subtle'}/>
+                <Input ref={titleRef} variant={'subtle'} color={'black'}/>
               </Field>
               <Field label="Description">
-                <Input ref={descriptionRef} variant={'subtle'}/>
+                <Input ref={descriptionRef} variant={'subtle'} color={'black'}/>
               </Field>
               <Field label="Location">
-                <Input ref={locationRef} variant={'subtle'}/>
+                <Input ref={locationRef} variant={'subtle'} color={'black'}/>
               </Field>
               <NumberInput.Root variant={'subtle'}>
                 <NumberInput.Label>Price</NumberInput.Label>
-                <NumberInput.Input ref={priceRef}></NumberInput.Input>
+                <NumberInput.Input ref={priceRef} color={'black'}></NumberInput.Input>
               </NumberInput.Root>
               <SelectRoot collection={createListCollection({ items: stateOptions })} variant={'subtle'}>
                 <SelectLabel>State</SelectLabel>
