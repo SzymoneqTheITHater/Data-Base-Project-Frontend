@@ -35,7 +35,7 @@ export default function Home() {
       <button className="bg-cyan-900 text-white" onClick={() => setCategory(2)}>
         All listings
       </button>
-      <Form open={selectedListingId !== undefined} onConfirm={onFormConfirm}>
+      <Form open={selectedListingId !== undefined} onConfirm={onFormConfirm} onClose={() => setSelectedListingId(undefined)}>
         <Field label="Your name">
           <Input variant={'subtle'} />
         </Field>

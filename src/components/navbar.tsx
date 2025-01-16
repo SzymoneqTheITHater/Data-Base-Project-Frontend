@@ -26,7 +26,7 @@ export function Navbar() {
   const onCreateAccount = () => {
     if (usernameRef.current && emailRef.current && passwordRef.current) {
       setShowForm(false);
-      
+
       const username: string = usernameRef.current.value,
         email: string = emailRef.current.value,
         password: string = passwordRef.current.value;
@@ -90,7 +90,7 @@ export function Navbar() {
         <LoginPage />
       )}
       <Button onClick={() => setShowForm(true)}>Register</Button>
-      <Form open={showForm} onConfirm={onCreateAccount}>
+      <Form open={showForm} onConfirm={onCreateAccount} onClose={() => setShowForm(false)}>
         <Field label="Username">
           <Input variant={'subtle'} ref={usernameRef} />
         </Field>

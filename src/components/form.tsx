@@ -1,11 +1,11 @@
-import { DialogRoot, DialogBackdrop, DialogContent, DialogHeader, DialogTitle, DialogBody, DialogFooter, DialogActionTrigger, Button, DialogCloseTrigger, createListCollection, Fieldset, Input, NumberInput, SelectContent, SelectItem, SelectLabel, SelectRoot, SelectTrigger } from "@chakra-ui/react";
-import { Field } from "./ui/field";
+import { DialogRoot, DialogBackdrop, DialogContent, DialogHeader, DialogTitle, DialogBody, DialogFooter, DialogActionTrigger, Button, DialogCloseTrigger, Fieldset } from "@chakra-ui/react";
 import React, { JSX } from "react";
 
 interface IProps {
     open: boolean,
     onConfirm(): any,
-    children: JSX.Element[]
+    onClose(): any,
+    children: JSX.Element[],
 }
 
 export default function Form(props: IProps) {
@@ -25,7 +25,7 @@ export default function Form(props: IProps) {
                 </DialogBody>
                 <DialogFooter>
                     <DialogActionTrigger asChild>
-                        <Button variant="outline" color={'black'}>Cancel</Button>
+                        <Button variant="outline" color={'black'} onClick={props.onClose}>Cancel</Button>
                     </DialogActionTrigger>
                     <Button color={'black'} onClick={props.onConfirm}>Confirm</Button>
                 </DialogFooter>
