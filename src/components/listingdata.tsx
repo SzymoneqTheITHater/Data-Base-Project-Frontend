@@ -2,6 +2,9 @@
 import Image from "next/image";
 
 import React, { useState, useEffect } from "react";
+import Listing from "./listing";
+import IListing from "@/models/IListing";
+import { Container, Skeleton } from "@chakra-ui/react";
 interface ImageLoaderProps {
   src: string;
   width: number;
@@ -37,70 +40,32 @@ interface IProps {
   page: number,
   sellerId: number,
   category: number,
+  listings?: IListing[],
 }
 
 const link: string = "http://127.0.0.1:8000";
 export default function ListingData(props: IProps) {
-  const [data, setData] = useState<ApiResponse | null>(null);
-  const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      setLoading(true);
-      setError(null);
-      try {
-        console.log("Fetching data from:", link);
-        const response = await fetch(link);
-
-        if (!response.ok) {
-          throw new Error(`There was an error: ${response.statusText}`);
-        }
-
-        const result: ApiResponse = await response.json();
-
-        setData(result);
-      } catch (err) {
-        setError(err instanceof Error ? err.message : "Unknown error");
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchData();
-  }, []);
-  if (loading) {
-    return <div>Loading...</div>;
-  }
+  /*
   if (error) {
     return <div>Error has occured; {error}</div>;
   }
   if (!data || !data.results || data.results.length === 0) {
     return <div>No listings found.</div>;
   }
+    */
   return (
-    <div className="flex flex-col gap-5  ">
-      {data.results.map((item) => (
-        <div key={item.id}>
-          <h2>{item.title}</h2>
-          <p>{item.description}</p>
-          <p>Price: {item.price} PLN</p>
-          <p>Category ID: {item.category}</p>
-          <p>Seller ID: {item.seller}</p>
-          <p>State: {item.state}</p>
-          {item.image ? (
-            <Image
-              //src={"http://127.0.0.1:8000" + item.image}
-              loader={ImageLoader}
-              src={item.image}
-              width={400}
-              height={400}
-              alt="image of product"
+    <Container maxWidth={'80%'}>
+      {
+        !props.listings ? 
+        <Skeleton height={200}/>
+        :
+          props.listings.map(item => (
+            <Listing
+              {...item}
             />
-          ) : (
-            <div> No image</div>
-          )}
-        </div>
-      ))}
-    </div>
+          ))}
+    </Container>
   );
 };
