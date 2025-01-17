@@ -120,7 +120,7 @@ export default function Listing(props: IProps) {
                                             messages?.map(message => (
                                                 <Card.Root variant={'subtle'}>
                                                     <Card.Body backgroundColor={message.sender === user?.id ? 'teal.200' : undefined}>
-                                                        <Card.Title>Author</Card.Title>
+                                                        <Card.Title>{message.sender === user?.id ? 'You' : 'Seller'}</Card.Title>
                                                         <Card.Description>{message.content}</Card.Description>
                                                         <Card.Footer>{new Intl.DateTimeFormat().format(new Date())}</Card.Footer>
                                                     </Card.Body>

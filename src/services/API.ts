@@ -1,5 +1,7 @@
 "use client";
 
+import { IChatResponse } from "@/models/IChat";
+import IDjangoResponse from "@/models/IDjangoResponse";
 import IListing, { IListingRequest, IListingResponse, IListingsResponse } from "@/models/IListing";
 import { IMessageResponse } from "@/models/IMessage";
 import { ITransactionRequest, ITransactionResponse, ITransactionsResponse, IUpdateTransactionRequest } from "@/models/ITransaction";
@@ -68,7 +70,7 @@ export default class API {
     static getChat(accessToken: string, listingId: number) {
         return this.get(accessToken, this.apiUrl + "/chats/" + listingId);
     }
-    static getChats(accessToken: string) {
+    static getChats(accessToken: string): Promise<IDjangoResponse<IChatResponse>> {
         return this.get(accessToken, this.apiUrl + "/chats/");
     }
     static createChat(accessToken: string, listing_id: number, buyer_id: number) {
