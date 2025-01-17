@@ -13,7 +13,7 @@ import API from "@/services/API";
 export default function Page() {
   const { accessToken, user } = useUser();
   const [isListingForm, setListingForm] = React.useState(false);
-  const [listings, setListings] = React.useState<IListing[] | undefined>();
+  const [listings, setListings] = React.useState<IListingResponse[] | undefined>();
   
   const titleRef = React.useRef<HTMLInputElement>(null);
   const descriptionRef = React.useRef<HTMLInputElement>(null);
@@ -24,7 +24,7 @@ export default function Page() {
     if (user) {
       API.getListings()
         .then(listings => {
-          const userListings: IListing[] = listings.results.filter(listing => listing.seller.id === user.id);
+          const userListings: IListingResponse[] = listings.results.filter(listing => listing.seller === user.id);
           setListings(userListings);
         })
     }
@@ -46,21 +46,22 @@ export default function Page() {
       };
 
       API.addListing(accessToken, body)
-        .then(({ id, state, created_at }) => {
-          const newListing: IListing = {
+        .then(({ id, state, created_at, image }) => {
+          const newListing: IListingResponse = {
             id,
             title,
             description,
             price,
             location,
-            seller: user,
+            seller: user.id,
             isActive: true,
             category: null,
-            createdAt: created_at,
-            state: state as TState
+            created_at,
+            state: state as TState,
+            image
           };
 
-          const newListings: IListing[] = (listings || []).concat(newListing);
+          const newListings: IListingResponse[] = (listings || []).concat(newListing);
           setListings(newListings);
         });
     }

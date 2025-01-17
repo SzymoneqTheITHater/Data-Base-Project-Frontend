@@ -28,10 +28,11 @@ export interface IListingResponse {
     location: string,
     created_at: string,
     category: any, // TODO
+    isActive: boolean;
     id: number,
     state: string,
     image: any, // TODO
     seller: number,
 }
 
-export interface IListingsResponse extends IDjangoResponse<IListing> { }
+export interface IListingsResponse extends IDjangoResponse<IListingResponse> { }

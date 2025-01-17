@@ -42,7 +42,7 @@ export default function Page() {
   const onDecision = (transactionId: number, decision: TStatus) => {
     if (accessToken && user && sellingTransactions) {
       API.updateTransaction(accessToken, transactionId, { status: decision, user: user.id })
-        .then(res => {
+        .then(() => {
           const newSellingTransactions: ITransactionResponse[] = [...sellingTransactions];
           const updatedTransaction: ITransactionResponse | undefined = newSellingTransactions.find(transaction => transaction.id === transactionId);
           if (updatedTransaction) {
@@ -149,14 +149,16 @@ export default function Page() {
                         <DataListItem key='seller' label='Seller' value={seller} />
                         <DataListItem key='date' label='Date' value={new Date(transaction_date).toLocaleDateString()} />
                       </DataListRoot>
-                      <Badge colorPalette={status === 'pending' ? 'orange' : status === 'completed' ? 'green' : 'red'}>{status}</Badge>
+                      <Badge colorPalette={status === 'pending' ? 'orange' : status === 'completed' ? 'green' : 'red'} maxWidth={75}>{status}</Badge>
                     </Card.Body>
-                    <Card.Footer>
-                      <HStack>
-                        <Button color={"blue.600"} variant={'surface'} onClick={() => onDecision(id, 'completed')}>Accept</Button>
-                        <Button color={"blue.600"} variant={'surface'} onClick={() => onDecision(id, 'canceled')}>Refuse</Button>
-                      </HStack>
-                    </Card.Footer>
+                    {status === 'pending' &&
+                      <Card.Footer>
+                        <HStack>
+                          <Button color={"blue.600"} variant={'surface'} onClick={() => onDecision(id, 'completed')}>Accept</Button>
+                          <Button color={"blue.600"} variant={'surface'} onClick={() => onDecision(id, 'canceled')}>Refuse</Button>
+                        </HStack>
+                      </Card.Footer>
+                    }
                   </Card.Root>
                 ))
           }

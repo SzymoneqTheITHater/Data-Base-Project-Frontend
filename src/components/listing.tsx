@@ -1,6 +1,6 @@
 "use client";
 
-import IListing from "@/models/IListing";
+import IListing, { IListingResponse } from "@/models/IListing";
 import { Button, Card, Input, Skeleton, Stack } from "@chakra-ui/react";
 import { DrawerBody, DrawerCloseTrigger, DrawerContent, DrawerFooter, DrawerHeader, DrawerRoot, DrawerTitle, DrawerTrigger } from "./ui/drawer";
 import { Field } from "./ui/field";
@@ -13,7 +13,7 @@ import { DataListItem, DataListRoot } from "./ui/data-list";
 import { EmptyState } from "./ui/empty-state";
 import { LuAnnoyed } from "react-icons/lu";
 
-interface IProps extends IListing {
+interface IProps extends IListingResponse {
     onBuy(listingId: number): any,
 }
 
@@ -36,7 +36,7 @@ export default function Listing(props: IProps) {
                         const chat: IChatResponse = {
                             id: res.id,
                             buyer: user.id,
-                            seller: props.seller.id,
+                            seller: props.seller,
                             listing: props.id
                         }
                         setChat(chat);
@@ -76,7 +76,7 @@ export default function Listing(props: IProps) {
         }
     }
 
-    const { id, title, description, price, location } = props;
+    const { id, title, description, price, location, seller } = props;
     return (
         <Card.Root variant={'elevated'}>
             <Card.Body>
@@ -85,60 +85,63 @@ export default function Listing(props: IProps) {
                     <DataListItem key='description' label='Description' value={description} />
                     <DataListItem key='price' label='Price' value={price} />
                     <DataListItem key='location' label='Location' value={location} />
+                    <DataListItem key='seller' label='Seller id' value={seller} />
                 </DataListRoot>
             </Card.Body>
-            <Card.Footer>
-                <Button color={"blue.600"} variant={'surface'} onClick={() => props.onBuy(id)}>Buy</Button>
-                <DrawerRoot>
-                    <DrawerTrigger asChild>
-                        <Button color={"blue.600"} variant={'surface'} onClick={onContact}>Contact</Button>
-                    </DrawerTrigger>
-                    <DrawerContent>
-                        <DrawerHeader>
-                            <DrawerTitle color={'black'}>
-                                Chat
-                            </DrawerTitle>
-                        </DrawerHeader>
-                        <DrawerCloseTrigger />
-                        <DrawerBody>
-                            <Stack>
-                                {
-                                    chatExists === undefined ?
-                                        <>
-                                            <Skeleton height={50} />
-                                            <Skeleton height={50} />
-                                            <Skeleton height={50} />
-                                        </>
-                                        :
-                                        (!chatExists || messages?.length === 0 ?
-                                            <EmptyState
-                                                icon={<LuAnnoyed />}
-                                                title="No messages"
-                                                description="Begin a great conversation now!"
-                                            />
+            {seller !== user?.id &&
+                <Card.Footer>
+                    <Button color={"blue.600"} variant={'surface'} onClick={() => props.onBuy(id)}>Buy</Button>
+                    <DrawerRoot>
+                        <DrawerTrigger asChild>
+                            <Button color={"blue.600"} variant={'surface'} onClick={onContact}>Contact</Button>
+                        </DrawerTrigger>
+                        <DrawerContent>
+                            <DrawerHeader>
+                                <DrawerTitle color={'black'}>
+                                    Chat
+                                </DrawerTitle>
+                            </DrawerHeader>
+                            <DrawerCloseTrigger />
+                            <DrawerBody>
+                                <Stack>
+                                    {
+                                        chatExists === undefined ?
+                                            <>
+                                                <Skeleton height={50} />
+                                                <Skeleton height={50} />
+                                                <Skeleton height={50} />
+                                            </>
                                             :
-                                            messages?.map(message => (
-                                                <Card.Root variant={'subtle'}>
-                                                    <Card.Body backgroundColor={message.sender === user?.id ? 'teal.200' : undefined}>
-                                                        <Card.Title>{message.sender === user?.id ? 'You' : 'Seller'}</Card.Title>
-                                                        <Card.Description>{message.content}</Card.Description>
-                                                        <Card.Footer>{new Intl.DateTimeFormat().format(new Date())}</Card.Footer>
-                                                    </Card.Body>
-                                                </Card.Root>
-                                            ))
-                                        )
-                                }
-                            </Stack>
-                        </DrawerBody>
-                        <DrawerFooter>
-                            <Field label="Message" color={'black'}>
-                                <Input ref={messageRef} variant={'subtle'} />
-                            </Field>
-                            <Button variant={'surface'} onClick={onSend} color={'black'}>Send</Button>
-                        </DrawerFooter>
-                    </DrawerContent>
-                </DrawerRoot>
-            </Card.Footer>
+                                            (!chatExists || messages?.length === 0 ?
+                                                <EmptyState
+                                                    icon={<LuAnnoyed />}
+                                                    title="No messages"
+                                                    description="Begin a great conversation now!"
+                                                />
+                                                :
+                                                messages?.map(message => (
+                                                    <Card.Root variant={'subtle'}>
+                                                        <Card.Body backgroundColor={message.sender === user?.id ? 'teal.200' : undefined}>
+                                                            <Card.Title>{message.sender === user?.id ? 'You' : 'Seller'}</Card.Title>
+                                                            <Card.Description>{message.content}</Card.Description>
+                                                            <Card.Footer>{new Intl.DateTimeFormat().format(new Date())}</Card.Footer>
+                                                        </Card.Body>
+                                                    </Card.Root>
+                                                ))
+                                            )
+                                    }
+                                </Stack>
+                            </DrawerBody>
+                            <DrawerFooter>
+                                <Field label="Message" color={'black'}>
+                                    <Input ref={messageRef} variant={'subtle'} />
+                                </Field>
+                                <Button variant={'surface'} onClick={onSend} color={'black'}>Send</Button>
+                            </DrawerFooter>
+                        </DrawerContent>
+                    </DrawerRoot>
+                </Card.Footer>
+            }
         </Card.Root>
     )
 }

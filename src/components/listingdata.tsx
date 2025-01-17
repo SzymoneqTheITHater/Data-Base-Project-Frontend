@@ -3,7 +3,7 @@ import Image from "next/image";
 
 import React, { useState, useEffect } from "react";
 import Listing from "./listing";
-import IListing from "@/models/IListing";
+import IListing, { IListingResponse } from "@/models/IListing";
 import { Container, Skeleton, Stack } from "@chakra-ui/react";
 interface ImageLoaderProps {
   src: string;
@@ -18,29 +18,12 @@ interface ListingDataProps {
 const ImageLoader = ({ src, width }: ImageLoaderProps): string => {
   return `http://127.0.0.1:8000${src}?w=${width}&q=${75}`;
 };
-interface Meta {
-  title: string;
-  description: string;
-  price: number;
-  createdAt: string;
-  category: number;
-  id: number;
-  state: string;
-  image: string | null;
-  seller: number;
-}
-interface ApiResponse {
-  count: number;
-  next: string | null;
-  previous: string | null;
-  results: Meta[];
-}
 
 interface IProps {
   page: number,
   sellerId: number,
   category: number,
-  listings?: IListing[],
+  listings?: IListingResponse[],
   onBuy(listingId: number): any,
 }
 

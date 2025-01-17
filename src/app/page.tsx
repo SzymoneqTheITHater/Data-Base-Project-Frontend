@@ -4,17 +4,17 @@ import { useUser } from "@/components/getUserData";
 import ListingData from "@/components/listingdata";
 import { Field } from "@/components/ui/field";
 import mockData from "@/mockData";
-import IListing from "@/models/IListing";
+import IListing, { IListingResponse } from "@/models/IListing";
 import { ITransactionRequest } from "@/models/ITransaction";
 import API from "@/services/API";
 import { SelectRoot, SelectLabel, SelectTrigger, SelectContent, SelectItem, Input, createListCollection } from "@chakra-ui/react";
-import React from "react";
+import React, { use } from "react";
 export default function Home() {
-  const { accessToken } = useUser();
+  const { accessToken, user } = useUser();
 
   const [category, setCategory] = React.useState(0);
   const [refreshKey, setRefreshKey] = React.useState(0);
-  const [listings, setListings] = React.useState<IListing[]>();
+  const [listings, setListings] = React.useState<IListingResponse[]>();
   const [selectedListingId, setSelectedListingId] = React.useState<number>();
 
   const shippingNames: string[] = ['DHL', 'Inpost', 'Polish Post', 'Self service'];
@@ -25,7 +25,13 @@ export default function Home() {
 
   React.useEffect(() => {
     API.getListings()
-      .then(listings => setListings(listings.results));
+      .then(({ results: listings }) => {
+        if (user) {
+          listings = listings.filter(listing => listing.seller !== user.id);
+        }
+        setListings(listings)
+      }
+      );
   }, []);
 
   const onConfirmForm = () => {
