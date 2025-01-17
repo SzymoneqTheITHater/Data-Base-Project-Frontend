@@ -205,6 +205,5 @@ export default function Page() {
         </Tabs.Content>
       </Tabs.Root>
     </Container>
-
   );
 }

@@ -7,20 +7,27 @@ import { Field } from "@/components/ui/field";
 import { SelectContent, SelectLabel, SelectRoot, SelectTrigger } from "@/components/ui/select";
 import { TState } from "@/models/TState";
 import { cookies } from "next/headers";
-import IListing, { IListingRequest } from "@/models/IListing";
+import IListing, { IListingRequest, IListingResponse, IListingsResponse } from "@/models/IListing";
 import API from "@/services/API";
 
 export default function Page() {
   const { accessToken, user } = useUser();
   const [isListingForm, setListingForm] = React.useState(false);
   const [listings, setListings] = React.useState<IListing[] | undefined>();
+  
   const titleRef = React.useRef<HTMLInputElement>(null);
   const descriptionRef = React.useRef<HTMLInputElement>(null);
   const priceRef = React.useRef<HTMLInputElement>(null);
   const locationRef = React.useRef<HTMLInputElement>(null);
 
   React.useEffect(() => {
-
+    if (user) {
+      API.getListings()
+        .then(listings => {
+          const userListings: IListing[] = listings.results.filter(listing => listing.seller.id === user.id);
+          setListings(userListings);
+        })
+    }
   }, []);
 
   const hAddButton = () => {
