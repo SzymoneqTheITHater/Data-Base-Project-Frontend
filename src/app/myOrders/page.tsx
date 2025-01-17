@@ -9,13 +9,14 @@ import API from "@/services/API";
 import { Badge, Button, Card, Container, HStack, Skeleton, Tabs } from "@chakra-ui/react";
 import { title } from "process";
 import React from "react";
-import { LuUser, LuFolder, LuSquareCheck, LuAnnoyed } from "react-icons/lu";
+import { LuAnnoyed } from "react-icons/lu";
 
 export default function Page() {
   const { accessToken, user } = useUser();
 
   const [buyingTransactions, setBuyingTransactions] = React.useState<ITransactionResponse[]>();
   const [sellingTransactions, setSellingTransactions] = React.useState<ITransactionResponse[]>();
+  const [showReviewForm, setShowReviewForm] = React.useState<ITransactionResponse[]>();
 
   React.useEffect(() => {
     if (accessToken && user) {
@@ -78,6 +79,9 @@ export default function Page() {
                         <DataListItem key='date' label='Date' value={new Date(transaction_date).toLocaleDateString()} />
                       </DataListRoot>
                       <Badge colorPalette={status === 'pending' ? 'orange' : status === 'completed' ? 'green' : 'red'} maxWidth={'40px'}>{status}</Badge>
+                      {status === 'completed' &&
+                        <Button>Write review</Button>
+                      }
                     </Card.Body>
                   </Card.Root>
                 ))

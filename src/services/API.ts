@@ -1,6 +1,7 @@
 "use client";
 
 import IListing, { IListingRequest, IListingResponse, IListingsResponse } from "@/models/IListing";
+import { IMessageResponse } from "@/models/IMessage";
 import { ITransactionRequest, ITransactionResponse, ITransactionsResponse, IUpdateTransactionRequest } from "@/models/ITransaction";
 import { INewUserRequest } from "@/models/IUser";
 
@@ -70,14 +71,14 @@ export default class API {
     static getChats(accessToken: string) {
         return this.get(accessToken, this.apiUrl + "/chats/");
     }
-    static startNewChat(accessToken: string, listingId: number, senderId: number, content: string) {
-        return this.post(accessToken, this.apiUrl + "/addmessage/" + listingId, { content, sender_id: senderId });
+    static createChat(accessToken: string, listing_id: number, buyer_id: number) {
+        return this.post(accessToken, this.apiUrl + "/chats/create/", { listing_id, buyer_id });
     }
-    static getMessages(accessToken: string, chatId: number) {
-        return this.post(accessToken, this.apiUrl + "/messages/" + chatId);
+    static getMessages(accessToken: string, chatId: number): Promise<IMessageResponse[]> {
+        return this.get(accessToken, this.apiUrl + "/messages/" + chatId);
     }
-    static sendMessageToChat(accessToken: string, listingId: number, chatId: number, content: string) {
-        return this.post(accessToken, this.apiUrl + "/addmessage/" + listingId + '/' + chatId, { content });
+    static sendMessageToChat(accessToken: string, listingId: number, chatId: number, content: string, user_id: number): Promise<IMessageResponse> {
+        return this.post(accessToken, this.apiUrl + "/addmessage/" + listingId + '/' + chatId, { content, user_id });
     }
     static getListings(): Promise<IListingsResponse> {
         return this.get(undefined, this.apiUrl + "/");

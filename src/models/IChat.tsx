@@ -7,3 +7,10 @@ export default interface IChat {
     seller: IUser;
     listing: IListing;
 }
+
+export interface IChatResponse {
+    id: number;
+    buyer: number;
+    seller: number;
+    listing: number;
+}

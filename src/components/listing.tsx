@@ -6,9 +6,8 @@ import { DrawerBody, DrawerCloseTrigger, DrawerContent, DrawerFooter, DrawerHead
 import { Field } from "./ui/field";
 import React from "react";
 import API from "@/services/API";
-import mockData from "@/mockData";
-import IMessage from "@/models/IMessage";
-import IChat from "@/models/IChat";
+import IMessage, { IMessageResponse } from "@/models/IMessage";
+import { IChatResponse } from "@/models/IChat";
 import { useUser } from "./getUserData";
 import { DataListItem, DataListRoot } from "./ui/data-list";
 import { EmptyState } from "./ui/empty-state";
@@ -19,8 +18,8 @@ interface IProps extends IListing {
 }
 
 export default function Listing(props: IProps) {
-    const [messages, setMessages] = React.useState<IMessage[]>();
-    const [chat, setChat] = React.useState<IChat>();
+    const [messages, setMessages] = React.useState<IMessageResponse[]>();
+    const [chat, setChat] = React.useState<IChatResponse>();
     const [chatExists, setChatExists] = React.useState<boolean>();
 
     const { user, accessToken } = useUser();
@@ -30,24 +29,29 @@ export default function Listing(props: IProps) {
     const onSend = () => {
         if (messageRef.current && user && accessToken) {
             const content: string = messageRef.current.value;
-
+            let promise: Promise<void> = Promise.resolve();
             if (!chat) {
-                API.startNewChat(accessToken, props.id, user.id, content)
-            } else {
-                API.sendMessageToChat(accessToken, props.id, chat.id, content)
-                    .then(({ id, createdAt }) => {
-                        const newMessage: IMessage = {
-                            id,
-                            chat,
-                            sender: user,
-                            content,
-                            status: "sent",
-                            createdAt
+                promise = API.createChat(accessToken, props.id, user.id)
+                    .then(res => {
+                        const chat: IChatResponse = {
+                            id: res.id,
+                            buyer: user.id,
+                            seller: props.seller.id,
+                            listing: props.id
                         }
-                        const newMessages: IMessage[] = (messages || []).concat(newMessage);
-                        setMessages(newMessages);
-                    })
+                        setChat(chat);
+                    });
             }
+
+            promise.then(() => {
+                if (chat) {
+                    return API.sendMessageToChat(accessToken, props.id, chat.id, content, user.id)
+                        .then(message => {
+                            const newMessages: IMessageResponse[] = (messages || []).concat(message);
+                            setMessages(newMessages);
+                        });
+                }
+            })
         }
     }
 
@@ -55,12 +59,16 @@ export default function Listing(props: IProps) {
     const onContact = () => {
         if (accessToken) {
             API.getChat(accessToken, props.id)
-                .then((res: any[]) => {
+                .then((res: IChatResponse[]) => {
                     if (res.length !== 0) {
+                        const chat: IChatResponse = res[0];
                         setChatExists(true);
-                        setChat(mockData.chat1);
+                        setChat(chat);
 
-                        API.getMessages(accessToken, mockData.chat1.id)
+                        API.getMessages(accessToken, chat.id)
+                            .then(messages => {
+                                setMessages(messages);
+                            })
                     } else {
                         setChatExists(false);
                     }
@@ -111,7 +119,7 @@ export default function Listing(props: IProps) {
                                             :
                                             messages?.map(message => (
                                                 <Card.Root variant={'subtle'}>
-                                                    <Card.Body backgroundColor={message.sender.id === 1 ? 'teal.200' : undefined}>
+                                                    <Card.Body backgroundColor={message.sender === user?.id ? 'teal.200' : undefined}>
                                                         <Card.Title>Author</Card.Title>
                                                         <Card.Description>{message.content}</Card.Description>
                                                         <Card.Footer>{new Intl.DateTimeFormat().format(new Date())}</Card.Footer>
