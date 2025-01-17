@@ -4,7 +4,7 @@ import { IChatResponse } from "@/models/IChat";
 import IDjangoResponse from "@/models/IDjangoResponse";
 import IListing, { IListingRequest, IListingResponse, IListingsResponse } from "@/models/IListing";
 import { IMessageResponse } from "@/models/IMessage";
-import { IReviewRequest } from "@/models/IReview";
+import { IReviewRequest, IReviewResponse } from "@/models/IReview";
 import { ITransactionRequest, ITransactionResponse, ITransactionsResponse, IUpdateTransactionRequest } from "@/models/ITransaction";
 import { INewUserRequest } from "@/models/IUser";
 
@@ -101,7 +101,7 @@ export default class API {
     static updateTransaction(accessToken: string, transactionId: number, data: IUpdateTransactionRequest) {
         return this.patch(accessToken, this.apiUrl + "/transactions/" + transactionId + "/update/", data);
     }
-    static getReview(accessToken: string) {
+    static getReviews(accessToken: string): Promise<IReviewResponse[]> {
         return this.get(accessToken, this.apiUrl + "/reviews/");
     }
     static createReview(accessToken: string, review: IReviewRequest) {

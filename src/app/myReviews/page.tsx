@@ -13,15 +13,16 @@ import { EmptyState } from "@/components/ui/empty-state";
 import { DataListItem, DataListRoot } from "@/components/ui/data-list";
 
 export default function Page() {
-  const { accessToken } = useUser();
+  const { accessToken, user } = useUser();
 
   const [reviews, setReviews] = React.useState<IReviewResponse[]>();
 
   React.useEffect(() => {
-    if (accessToken) {
+    if (accessToken && user) {
       API.getReviews(accessToken)
-        .then(res => {
-
+        .then(reviews => {
+          const userReviews: IReviewResponse[] = reviews.filter(review => review.reviewee === user.id);
+          setReviews(userReviews);
         });
     }
   }, []);
@@ -36,8 +37,8 @@ export default function Page() {
           reviews.length === 0 ?
             <EmptyState
               icon={<LuAnnoyed />}
-              title="No transactions"
-              description="You are not buying anything at the moment..."
+              title="No reviews"
+              description="Don't worry, don't feel underestimated..."
             />
             :
             reviews.map(({ comment, reviewer, listing, rating }) => (

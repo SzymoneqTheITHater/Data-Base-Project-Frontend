@@ -71,6 +71,9 @@ export function Navbar() {
         <Link href={"/chat"} className="hover:cursor-pointer hover:bg-cyan-400">
           Messages
         </Link>
+        <Link href={"/myReviews"} className="hover:cursor-pointer hover:bg-cyan-400">
+          Reviews
+        </Link>
         <Link
           href={"/myAccount"}
           className="hover:cursor-pointer hover:bg-cyan-400 rounded-md"
